@@ -6,17 +6,20 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Container from 'react-bootstrap/Container';
 
 import './todo.scss';
 
-function ToDo(props) {
+function ToDo() {
 
-  const [ list, setList ] = useState([]);
+  const [list, setList] = useState([]);
+  // const [item, setItem] = useState({});
 
   const addItem = (item) => {
     item._id = Math.random();
     item.complete = false;
-    setList([ ...list, item]);
+    setList([...list, item]);
+    // addNewTask(item);
   };
 
   const toggleComplete = id => {
@@ -25,8 +28,11 @@ function ToDo(props) {
 
     if (item._id) {
       item.complete = !item.complete;
-      let list = this.state.list.map(listItem => listItem._id === item._id ? item : listItem);
-      this.setState({list});
+      // setItem(item);
+      // let newString = item.complete.toString();
+      // dbToggleStatus(newString);
+      let newList = list.map(listItem => listItem._id === item._id ? item : listItem);
+      setList(newList);
     }
 
   };
@@ -49,29 +55,42 @@ function ToDo(props) {
 
   return (
     <>
-      <header>
-        <Navbar>
-          <Nav>
-            <h2>
-              ToDo List Manager ({list.length})
-            </h2>
-          </Nav>
-        </Navbar>
-      </header>
+      <Container>
+        <Row>
+          <Col>
 
-      <section className="todo">
+            <header>
+              <Navbar bg="dark" variant="dark">
+                <Nav className="mr-auto">
+                  <Navbar.Brand>
+                    ToDo List Manager ({list.length})
+                    {/* list.filter(item => !item.complete).length */}
+                  </Navbar.Brand>
+                </Nav>
+              </Navbar>
+            </header>
 
-        <div>
-          <TodoForm handleSubmit={addItem} />
-        </div>
+          </Col>
+        </Row>
 
-        <div>
-          <TodoList
-            list={list}
-            handleComplete={toggleComplete}
-          />
-        </div>
-      </section>
+        <Row>
+          <Col md={4}>
+            <div>
+              <TodoForm handleSubmit={addItem} />
+            </div>
+          </Col>
+
+          <Col md={8}>
+            <div>
+              <TodoList
+                list={list}
+                handleComplete={toggleComplete}
+              />
+            </div>
+          </Col>
+        </Row>
+          
+      </Container>
     </>
   );
 }

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import Card from 'react-bootstrap/Card'
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 function TodoForm(props) {
 
   const [item, setItem] = useState({});
 
   const handleInputChange = e => {
-    setItem({ ...item, [e.target.name]: e.target.value } );
+    setItem({ ...item, [e.target.name]: e.target.value});
   };
 
   const handleSubmit = (e) => {
@@ -17,30 +19,29 @@ function TodoForm(props) {
   };
 
   return (
-    <Card style={{ width: '18rem' }}>
-      <h3>Add Item</h3>
-      <Card.Body>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>To Do Item</span>
-          <input
-            name="text"
-            placeholder="Add To Do List Item"
-            onChange={handleInputChange}
-          />
-        </label>
-        <label>
-          <span>Difficulty Rating</span>
-          <input defaultValue="1" type="range" min="1" max="5" name="difficulty" onChange={handleInputChange} />
-        </label>
-        <label>
-          <span>Assigned To</span>
-          <input type="text" name="assignee" placeholder="Assigned To" onChange={handleInputChange} />
-        </label>
-        <button>Add Item</button>
-      </form>
-      </Card.Body>
-    </Card>
+    <Form onSubmit={handleSubmit}>
+      <Card style={{ width: '18rem' }}>
+        <Card.Body>
+          <Card.Title>Add Item</Card.Title>
+
+          <Form.Group controlId="formToDoItem">
+            <Form.Label>To Do Item</Form.Label>
+            <Form.Control onChange={handleInputChange} type="text" placeholder="Add to do list item here" />
+          </Form.Group>
+
+          <Form.Group controlId="formAsignee">
+            <Form.Label>Assigned To</Form.Label>
+            <Form.Control onChange={handleInputChange} type="text" placeholder="Assignee Name" />
+          </Form.Group>
+
+          <Form.Group controlId="formRange">
+            <Form.Label>Difficulty Rating</Form.Label>
+            <Form.Control onChange={handleInputChange} type="range" min="0" max="10"/>
+          </Form.Group>
+          <Button variant="primary" type="submit">Add Item</Button>
+        </Card.Body>
+      </Card>
+    </Form>
   );
   
 }
