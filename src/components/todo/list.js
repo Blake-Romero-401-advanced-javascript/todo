@@ -1,7 +1,8 @@
 import React from 'react';
-import ListGroup from 'react-bootstrap/ListGroup'
+import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
 
-function TodoList(props) {
+export default function TodoList(props) {
 
   return (
     <ListGroup>
@@ -15,10 +16,9 @@ function TodoList(props) {
             <br></br>
             {item.assignee}
           </span>
+          <Button onClick={() => {props.handleDelete(item._id)}}>X</Button>
         </ListGroup.Item>
       ))}
     </ListGroup>
   );
 }
-
-export default TodoList;
