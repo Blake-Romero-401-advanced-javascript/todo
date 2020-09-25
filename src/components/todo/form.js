@@ -1,21 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
+import useForm from '../../hooks/use-form.js'
+
 export default function TodoForm(props) {
 
-  const [item, setItem] = useState({});
+  // const [item, setItem] = useState({});
+  const [handleSubmit, handleInputChange] = useForm(submitForm);
 
-  const handleInputChange = e => {
-    setItem({ ...item, [e.target.name]: e.target.value});
-  };
+  // const handleInputChange = e => {
+  //   setItem({ ...item, [e.target.name]: e.target.value});
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    e.target.reset();
+  function submitForm(item) {
+    // e.preventDefault();
+    // e.target.reset();
     props.handleSubmit(item);
-    setItem({});
+    // setItem({});
   };
 
   return (

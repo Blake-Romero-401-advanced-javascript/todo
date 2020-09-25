@@ -8,19 +8,22 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 
-import axios from 'axios';
+// import axios from 'axios';
+import useAjax from '../../hooks/use-ajax.js';
 
 import './todo.scss';
 
 export default function ToDo() {
 
   const [list, setList] = useState([]);
-  // const [item, setItem] = useState({});
+  const [item, setItem] = useState({});
+  const [id, setID] = useState();
 
   const addItem = (item) => {
     item._id = Math.random();
     item.complete = false;
     setList([...list, item]);
+    setItem(item);
     addNewTask(item);
   };
 
@@ -30,39 +33,29 @@ export default function ToDo() {
 
     if (item._id) {
       item.complete = !item.complete;
-      // setItem(item);
-      let newString = item.complete.toString();
-      dbToggleStatus(newString);
+      setItem(item);
+      // let newString = item.complete.toString();
+      dbToggleStatus(item);
       let newList = list.map(listItem => listItem._id === item._id ? item : listItem);
       setList(newList);
     }
 
   };
 
-  function removeTask(id) {
+  const removeTask = id => {
     let reducedList = list.filter(i => i._id !== id) || {};
-    console.log('ID?', id);
-    console.log('List Shape:', list);
-    console.log('List After Delete:', reducedList);
+    setList(reducedList);
+    setID(id);
+    deleteTask(id);
   }
 
-  async function getStoredTasks() {
-    const response = await axios.get('http://localhost:3001/api/v1/todos');
-    setList(response.data);
-  }
+  const { getStoredTasks } = useAjax(setList, 'http://localhost:3001/api/v1/todos', 'get');
 
-  async function addNewTask(item) {
-    await axios.post('http://localhost:3001/api/v1/todos', {
-      text: item.txt,
-      asignee: item.assignee,
-      complete: item.complete,
-      difficulty: item.difficulty,
-    });
-  }
+  const { addNewTask } = useAjax(item, 'http://localhost:3001/api/v1/todos', 'post');
 
-  async function dbToggleStatus(id, status) {
-    await axios.put(`http://localhost:3001/api/v1/todos/${id}`, {complete: status});
-  }
+  const { dbToggleStatus } = useAjax(item, 'http://localhost:3001/api/v1/todos/', 'put');
+
+  const { deleteTask } = useAjax(id, 'http://localhost:3001/api/v1/todos/', 'delete');
 
   // useEffect(() => {
   //   let newList = [
@@ -76,12 +69,12 @@ export default function ToDo() {
   //   setList(newList);
   // }, []);
 
-  useEffect(() => {
-    getStoredTasks();
-  }, []);
+  // useEffect(() => {
+  //   getStoredTasks();
+  // }, []);
 
   useEffect(() => {
-    document.title = `To Do List: ${list.length}`
+    document.title = `To Do List: ${list.filter(item => !item.complete).length}`
   }, [list]);
 
   return (
